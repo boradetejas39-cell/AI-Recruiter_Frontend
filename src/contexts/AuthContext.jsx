@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 // Initial state
 const initialState = {
   user: null,
-  token: localStorage.getItem('token'),
+  token: sessionStorage.getItem('token'),
   isAuthenticated: false,
   loading: true,
   error: null
@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }) => {
   // Load user from token
   useEffect(() => {
     const loadUser = async () => {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       if (token) {
         try {
           dispatch({ type: AUTH_ACTIONS.LOAD_USER_START });
@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
             payload: { user: response.data.data.user }
           });
         } catch (error) {
-          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
           dispatch({
             type: AUTH_ACTIONS.LOAD_USER_FAILURE,
             payload: error.response?.data?.message || 'Failed to load user'
@@ -150,7 +150,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/login', credentials);
       const { token, user } = response.data.data;
 
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
 
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
@@ -178,7 +178,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/register', userData);
       const { token, user } = response.data.data;
 
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
 
       dispatch({
         type: AUTH_ACTIONS.REGISTER_SUCCESS,
@@ -213,7 +213,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/google', body);
       const { token, user } = response.data.data;
 
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
 
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
@@ -240,7 +240,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
       toast.success('Logged out successfully');
     }

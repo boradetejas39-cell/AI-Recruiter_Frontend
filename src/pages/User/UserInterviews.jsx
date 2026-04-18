@@ -256,8 +256,24 @@ function HRVideoRoom({ onClose, userName }) {
         setCamError(true);
       }
     })();
-    return () => { s?.getTracks().forEach(t => t.stop()); };
+    return () => {
+      if (s) s.getTracks().forEach(t => t.stop());
+    };
   }, []);
+
+  // Dedicated cleanup for state-held stream and screen share
+  useEffect(() => {
+    return () => {
+      stream?.getTracks().forEach(t => t.stop());
+      screenStream?.getTracks().forEach(t => t.stop());
+    };
+  }, [stream, screenStream]);
+
+  useEffect(() => {
+    if (stream && localVideoRef.current) {
+      localVideoRef.current.srcObject = stream;
+    }
+  }, [stream, joined, camOn]);
 
   useEffect(() => {
     if (joined) timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000);

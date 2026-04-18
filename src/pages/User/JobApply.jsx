@@ -12,6 +12,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { Card, CardHeader, CardBody } from '../../components/UI/Card';
 import { Button } from '../../components/UI/Button';
+import AIBotScreener from '../../components/Bot/AIBotScreener';
+import { SparklesIcon } from '@heroicons/react/24/outline';
 
 const JobApply = () => {
   const { jobId } = useParams();
@@ -21,6 +23,7 @@ const JobApply = () => {
   const [coverLetter, setCoverLetter] = useState('');
   const [applying, setApplying] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showBot, setShowBot] = useState(false);
 
   useEffect(() => {
     fetchJobData();
@@ -70,6 +73,25 @@ const JobApply = () => {
     } catch (error) {
       console.error('Error applying for job:', error);
       alert('Error submitting application. Please try again.');
+    } finally {
+      setApplying(false);
+    }
+  };
+
+  const handleBotComplete = async (resumeId, transcript) => {
+    setApplying(true);
+    try {
+      await api.post('/jobs/apply', {
+        jobId,
+        resumeId,
+        coverLetter: transcript
+      });
+      alert('Application submitted successfully via AI!');
+      window.location.href = '/app/user/dashboard';
+    } catch (error) {
+      console.error('Error applying via bot:', error);
+      alert('Error submitting application. Please try again.');
+      setShowBot(false);
     } finally {
       setApplying(false);
     }
@@ -177,8 +199,16 @@ const JobApply = () => {
           </Card>
         </div>
 
-        {/* Application Form */}
+        {/* Application Form or Bot */}
         <div>
+          {showBot ? (
+            <AIBotScreener 
+              job={job}
+              resumes={userResumes}
+              onComplete={handleBotComplete}
+              onCancel={() => setShowBot(false)}
+            />
+          ) : (
           <Card>
             <CardHeader>
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -187,6 +217,20 @@ const JobApply = () => {
               </h2>
             </CardHeader>
             <CardBody>
+              <div className="mb-6 pb-6 border-b border-gray-100 flex flex-col items-center justify-center text-center">
+                 <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-3">
+                    <SparklesIcon className="h-6 w-6 text-purple-600" />
+                 </div>
+                 <h3 className="text-sm font-bold text-gray-900 mb-1">New: Apply with AI!</h3>
+                 <p className="text-xs text-gray-500 mb-4 px-4">Skip the traditional form. Answer a few quick questions in a chat to automatically apply.</p>
+                 <button 
+                   onClick={() => setShowBot(true)}
+                   className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-purple-200 transition-all flex items-center gap-2 text-sm"
+                 >
+                   <SparklesIcon className="h-4 w-4" /> Start AI Chat Application
+                 </button>
+              </div>
+
               {userResumes.length === 0 ? (
                 <div className="text-center py-8">
                   <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -257,6 +301,7 @@ const JobApply = () => {
               )}
             </CardBody>
           </Card>
+          )}
         </div>
       </div>
     </div>

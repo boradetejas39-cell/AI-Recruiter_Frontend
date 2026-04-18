@@ -21,6 +21,8 @@ import {
   PresentationChartLineIcon,
 } from '@heroicons/react/24/outline';
 
+import GlobalAIBot from '../Bot/GlobalAIBot';
+
 const Layout = () => {
   const { user, logout, isAdmin } = useAuth();
   const location = useLocation();
@@ -368,6 +370,7 @@ const Layout = () => {
           </div>
         </main>
       </div>
+      <GlobalAIBot />
     </div>
   );
 };
