@@ -240,6 +240,7 @@ const UserInterviews = () => {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [showHRRoom, setShowHRRoom] = useState(false);
+  const [hrRoomInterviewId, setHrRoomInterviewId] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -265,7 +266,14 @@ const UserInterviews = () => {
 
   return (
     <>
-      {showHRRoom && <HRVideoRoom userName={user?.name} onClose={() => setShowHRRoom(false)} />}
+      {showHRRoom && (
+        <HRVideoRoom
+          interviewId={hrRoomInterviewId}
+          role="user"
+          userName={user?.name}
+          onClose={() => { setShowHRRoom(false); setHrRoomInterviewId(null); }}
+        />
+      )}
 
       <div className="space-y-8 pb-12">
         {/* ── Header ── */}
@@ -342,7 +350,7 @@ const UserInterviews = () => {
                   round={r}
                   index={i}
                   isFirst={i === 0}
-                  onTryVideo={() => setShowHRRoom(true)}
+                  onTryVideo={() => { setHrRoomInterviewId(null); setShowHRRoom(true); }}
                 />
               ))}
             </div>
@@ -447,7 +455,7 @@ const UserInterviews = () => {
                     {roundStates.map(({ round, state }, i) => (
                       <RoundCard key={round} round={round} state={state} index={i}
                         interviewId={currentInterview._id}
-                        onStartHR={() => setShowHRRoom(true)} />
+                        onStartHR={() => { setHrRoomInterviewId(currentInterview._id); setShowHRRoom(true); }} />
                     ))}
                   </div>
 

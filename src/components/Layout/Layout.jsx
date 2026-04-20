@@ -120,7 +120,7 @@ const Layout = () => {
         <div className={`fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity ${sidebarOpen ? 'opacity-100' : 'opacity-0'}`}
           onClick={() => setSidebarOpen(false)} />
 
-        <div className={`relative flex w-64 flex-1 flex-col bg-gradient-to-b from-slate-900 to-slate-800 transform transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className={`relative flex w-64 flex-1 flex-col bg-gradient-to-b from-slate-900 to-slate-800 transform transition-transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} overflow-y-auto overflow-x-hidden`}>
           <div className="flex items-center justify-between px-6 py-6 border-b border-slate-700">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -205,7 +205,7 @@ const Layout = () => {
       </div>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:bg-gradient-to-b lg:from-slate-900 lg:to-slate-800 lg:border-r lg:border-slate-700">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col lg:bg-gradient-to-b lg:from-slate-900 lg:to-slate-800 lg:border-r lg:border-slate-700 overflow-y-auto overflow-x-hidden">
         <div className="flex items-center px-6 py-6 border-b border-slate-700">
           <div className="flex-shrink-0">
             <div className="h-10 w-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg flex items-center justify-center">

@@ -393,7 +393,14 @@ const InterviewDetail = () => {
                     );
                 })}
             </div>
-            {showVideoRoom && <HRVideoRoom userName={user?.name} onClose={() => setShowVideoRoom(false)} />}
+            {showVideoRoom && (
+                <HRVideoRoom
+                    interviewId={id}
+                    role="hr"
+                    userName={user?.name}
+                    onClose={() => setShowVideoRoom(false)}
+                />
+            )}
         </div>
     );
 };

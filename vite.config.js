@@ -5,6 +5,11 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [react()],
+    define: {
+        // Polyfill Node.js globals required by simple-peer / randombytes
+        global: 'globalThis',
+        'process.env': {},
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
