@@ -12,7 +12,8 @@ import {
   VideoCameraIcon as CamSolid,
 } from '@heroicons/react/24/solid';
 
-const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || API_URL.replace('/api', '');
 
 /**
  * HRVideoRoom
@@ -86,8 +87,9 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
     const socket = io(SOCKET_URL, { transports: ['websocket'] });
     socketRef.current = socket;
 
-    socket.emit('join-room', { interviewId, role });
-    console.log(`[VideoRoom] ${role} joined room for interview ${interviewId}`);
+    const cleanId = String(interviewId).trim();
+    socket.emit('join-room', { interviewId: cleanId, role });
+    console.log(`[VideoRoom] ${role} joined room for interview ${cleanId}`);
 
     // Helper: create a SimplePeer instance
     const createPeer = (initiator, remotePeerId) => {
@@ -140,12 +142,15 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
     // If HR joins later, they need to initiate call to anyone already there
     socket.on('existing-users', (users) => {
       console.log('[VideoRoom] existing users:', users);
-      if (role === 'hr') {
-        users.forEach(u => {
+      if (users.length > 0) {
+        const u = users[0]; // Assuming 1-on-1
+        setPeerName(u.role === 'hr' ? 'HR Interviewer' : 'Candidate');
+        
+        if (role === 'hr') {
           if (!peerRef.current) {
             peerRef.current = createPeer(true, u.socketId);
           }
-        });
+        }
       }
     });
 
