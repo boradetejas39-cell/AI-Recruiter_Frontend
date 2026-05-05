@@ -350,7 +350,7 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
               <p className="text-sm text-gray-400">Camera Off</p>
             </div>
           ) : (
-            <video ref={localVideoRef} autoPlay muted playsInline className="w-full h-full object-cover scale-x-[-1]" />
+            <video ref={localVideoRef} autoPlay muted playsInline className={`w-full h-full object-cover ${screenSharing ? '' : 'scale-x-[-1]'}`} />
           )}
           <div className="absolute bottom-3 left-3 bg-black/60 px-2 py-1 rounded-lg text-xs text-white font-medium">
             {userName} (You)
