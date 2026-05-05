@@ -131,7 +131,21 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
       setPeerName(peerRole === 'hr' ? 'HR Interviewer' : 'Candidate');
       if (role === 'hr') {
         // HR creates offer
-        peerRef.current = createPeer(true, socketId);
+        if (!peerRef.current) {
+          peerRef.current = createPeer(true, socketId);
+        }
+      }
+    });
+
+    // If HR joins later, they need to initiate call to anyone already there
+    socket.on('existing-users', (users) => {
+      console.log('[VideoRoom] existing users:', users);
+      if (role === 'hr') {
+        users.forEach(u => {
+          if (!peerRef.current) {
+            peerRef.current = createPeer(true, u.socketId);
+          }
+        });
       }
     });
 
@@ -262,7 +276,7 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
               Cancel
             </button>
             <button onClick={() => setJoined(true)}
-              disabled={camError && !localStream}
+              disabled={!localStream}
               className="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
               Join Now
             </button>
