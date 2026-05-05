@@ -349,6 +349,14 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
               </div>
               <p className="text-sm text-gray-400">Camera Off</p>
             </div>
+          ) : screenSharing ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-900">
+              <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg">
+                <ComputerDesktopIcon className="h-8 w-8 text-white" />
+              </div>
+              <p className="text-sm font-bold text-white">You are sharing your screen</p>
+              <p className="text-xs text-blue-400">Your screen is visible to others</p>
+            </div>
           ) : (
             <video ref={localVideoRef} autoPlay muted playsInline className={`w-full h-full object-cover ${screenSharing ? '' : 'scale-x-[-1]'}`} />
           )}
