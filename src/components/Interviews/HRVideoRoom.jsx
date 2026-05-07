@@ -237,8 +237,8 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
   ══════════════════════════════════════════════════════════════ */
   if (!joined) {
     return (
-      <div className="fixed inset-0 z-[100] bg-gray-950 flex items-center justify-center p-6">
-        <div className="bg-gray-900 border border-gray-700 rounded-3xl p-8 max-w-md w-full text-center space-y-6 shadow-2xl">
+      <div className="fixed inset-0 z-[100] bg-gray-950 flex items-center justify-center p-4 sm:p-6">
+        <div className="bg-gray-900 border border-gray-700 rounded-2xl sm:rounded-3xl p-6 sm:p-8 max-w-md w-full text-center space-y-4 sm:space-y-6 shadow-2xl overflow-y-auto max-h-[90vh]">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mx-auto">
             <VideoCameraIcon className="h-8 w-8 text-white" />
           </div>
@@ -275,14 +275,14 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
             </button>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button onClick={onClose}
-              className="flex-1 py-3 rounded-xl border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors text-sm font-medium">
+              className="order-2 sm:order-1 flex-1 py-3 rounded-xl border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors text-sm font-medium">
               Cancel
             </button>
             <button onClick={() => setJoined(true)}
               disabled={!localStream}
-              className="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
+              className="order-1 sm:order-2 flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-50">
               Join Now
             </button>
           </div>
@@ -295,9 +295,9 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
      IN-CALL
   ══════════════════════════════════════════════════════════════ */
   return (
-    <div className="fixed inset-0 z-[100] bg-gray-950 flex flex-col">
+    <div className="fixed inset-0 z-[100] bg-gray-950 flex flex-col h-[100dvh]">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-800 shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center">
             <VideoCameraIcon className="h-4 w-4 text-white" />
@@ -307,19 +307,20 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
             <p className="text-gray-400 text-xs">Live · {fmt(elapsed)}</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Connection status */}
-          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${peerConnected ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'}`}>
-            <SignalIcon className="h-3.5 w-3.5" />
-            {peerConnected ? 'Connected' : 'Waiting for other participant…'}
+          <div className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-medium ${peerConnected ? 'bg-emerald-900/50 text-emerald-400' : 'bg-amber-900/50 text-amber-400'}`}>
+            <SignalIcon className="h-3 sm:h-3.5 w-3 sm:w-3.5" />
+            <span className="hidden xs:inline">{peerConnected ? 'Connected' : 'Waiting…'}</span>
+            <span className="xs:hidden">{peerConnected ? 'Live' : 'Wait'}</span>
           </div>
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-          <span className="text-red-400 text-xs font-medium">REC</span>
+          <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-red-500 animate-pulse" />
+          <span className="text-red-400 text-[10px] sm:text-xs font-medium">REC</span>
         </div>
       </div>
 
       {/* Video grid */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 overflow-hidden">
         {/* Remote feed */}
         <div className="relative bg-gray-800 rounded-2xl overflow-hidden flex items-center justify-center">
           {peerConnected && remoteStream ? (
@@ -372,26 +373,26 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-center gap-4 py-5 border-t border-gray-800">
+      <div className="flex items-center justify-center gap-2 sm:gap-4 py-4 sm:py-5 border-t border-gray-800 bg-gray-950/80 backdrop-blur-md shrink-0">
         <button onClick={toggleMic}
-          className={`w-14 h-14 rounded-full flex flex-col items-center justify-center gap-0.5 transition-all outline-none ${micOn ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-red-600 text-white'}`}>
-          <MicSolid className="h-5 w-5" />
-          <span className="text-[9px]">{micOn ? 'Mute' : 'Unmute'}</span>
+          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex flex-col items-center justify-center gap-0.5 transition-all outline-none ${micOn ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-red-600 text-white'}`}>
+          <MicSolid className="h-4 sm:h-5 w-4 sm:w-5" />
+          <span className="text-[8px] sm:text-[9px]">{micOn ? 'Mute' : 'Unmute'}</span>
         </button>
         <button onClick={toggleCam}
-          className={`w-14 h-14 rounded-full flex flex-col items-center justify-center gap-0.5 transition-all outline-none ${camOn ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-red-600 text-white'}`}>
-          <CamSolid className="h-5 w-5" />
-          <span className="text-[9px]">{camOn ? 'Cam' : 'Off'}</span>
+          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex flex-col items-center justify-center gap-0.5 transition-all outline-none ${camOn ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-red-600 text-white'}`}>
+          <CamSolid className="h-4 sm:h-5 w-4 sm:w-5" />
+          <span className="text-[8px] sm:text-[9px]">{camOn ? 'Cam' : 'Off'}</span>
         </button>
         <button onClick={toggleScreen}
-          className={`w-14 h-14 rounded-full flex flex-col items-center justify-center gap-0.5 transition-all outline-none ${screenSharing ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
+          className={`hidden sm:flex w-14 h-14 rounded-full flex-col items-center justify-center gap-0.5 transition-all outline-none ${screenSharing ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
           <ComputerDesktopIcon className="h-5 w-5" />
           <span className="text-[9px]">Screen</span>
         </button>
         <button onClick={handleLeave}
-          className="w-16 h-14 rounded-full bg-red-600 text-white flex flex-col items-center justify-center gap-0.5 hover:bg-red-700 transition-colors shadow-lg outline-none">
-          <PhoneXMarkIcon className="h-5 w-5" />
-          <span className="text-[9px]">Leave</span>
+          className="w-14 h-12 sm:w-16 sm:h-14 rounded-full bg-red-600 text-white flex flex-col items-center justify-center gap-0.5 hover:bg-red-700 transition-colors shadow-lg outline-none">
+          <PhoneXMarkIcon className="h-4 sm:h-5 w-4 sm:w-5" />
+          <span className="text-[8px] sm:text-[9px]">Leave</span>
         </button>
       </div>
     </div>
