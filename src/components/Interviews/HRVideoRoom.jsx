@@ -320,9 +320,9 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
       </div>
 
       {/* Video grid */}
-      <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 overflow-hidden">
+      <div className="flex-1 min-h-0 grid grid-cols-1 grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-2 p-2 overflow-hidden">
         {/* Remote feed */}
-        <div className="relative bg-gray-800 rounded-2xl overflow-hidden flex items-center justify-center">
+        <div className="relative bg-gray-800 rounded-xl overflow-hidden flex items-center justify-center h-full">
           {peerConnected && remoteStream ? (
             <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
           ) : (
@@ -342,7 +342,7 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
         </div>
 
         {/* Local feed */}
-        <div className="relative bg-gray-800 rounded-2xl overflow-hidden">
+        <div className="relative bg-gray-800 rounded-xl overflow-hidden h-full">
           {camError || !camOn ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gray-900">
               <div className="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center">
@@ -373,7 +373,7 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-center gap-2 sm:gap-4 py-4 sm:py-5 border-t border-gray-800 bg-gray-950/80 backdrop-blur-md shrink-0">
+      <div className="flex items-center justify-center gap-3 sm:gap-4 py-3 sm:py-5 border-t border-gray-800 bg-gray-950/80 backdrop-blur-md shrink-0 px-2">
         <button onClick={toggleMic}
           className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex flex-col items-center justify-center gap-0.5 transition-all outline-none ${micOn ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-red-600 text-white'}`}>
           <MicSolid className="h-4 sm:h-5 w-4 sm:w-5" />
