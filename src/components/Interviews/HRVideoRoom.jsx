@@ -10,7 +10,9 @@ import {
 import {
   MicrophoneIcon as MicSolid,
   VideoCameraIcon as CamSolid,
+  CheckBadgeIcon
 } from '@heroicons/react/24/solid';
+import { interviewAPI } from '../../api/v2';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || API_URL.replace('/api', '');
@@ -232,6 +234,16 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
     onClose();
   }, [localStream, onClose]);
 
+  const handleComplete = useCallback(async () => {
+    if (!window.confirm('Are you sure you want to end this interview and mark the HR round as completed? This will notify the candidate.')) return;
+    try {
+      await interviewAPI.completeHR(interviewId);
+      handleLeave();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to complete HR round');
+    }
+  }, [interviewId, handleLeave]);
+
   /* ══════════════════════════════════════════════════════════════
      LOBBY
   ══════════════════════════════════════════════════════════════ */
@@ -385,15 +397,28 @@ const HRVideoRoom = ({ interviewId, role, userName, onClose }) => {
           <span className="text-[8px] sm:text-[9px]">{camOn ? 'Cam' : 'Off'}</span>
         </button>
         <button onClick={toggleScreen}
-          className={`hidden sm:flex w-14 h-14 rounded-full flex-col items-center justify-center gap-0.5 transition-all outline-none ${screenSharing ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
-          <ComputerDesktopIcon className="h-5 w-5" />
-          <span className="text-[9px]">Screen</span>
+          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex flex-col items-center justify-center gap-0.5 transition-all outline-none ${screenSharing ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}>
+          <ComputerDesktopIcon className="h-4 sm:h-5 w-4 sm:w-5" />
+          <span className="text-[8px] sm:text-[9px]">Screen</span>
         </button>
         <button onClick={handleLeave}
           className="w-14 h-12 sm:w-16 sm:h-14 rounded-full bg-red-600 text-white flex flex-col items-center justify-center gap-0.5 hover:bg-red-700 transition-colors shadow-lg outline-none">
           <PhoneXMarkIcon className="h-4 sm:h-5 w-4 sm:w-5" />
           <span className="text-[8px] sm:text-[9px]">Leave</span>
         </button>
+
+        {role === 'hr' && (
+          <button onClick={handleComplete}
+            className="ml-4 px-4 h-12 sm:h-14 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg outline-none group">
+            <div className="flex flex-col items-start">
+              <div className="flex items-center gap-1">
+                <CheckBadgeIcon className="h-4 w-4" />
+                <span className="text-xs font-bold whitespace-nowrap">Complete Round</span>
+              </div>
+              <span className="text-[8px] opacity-80">End session & notify</span>
+            </div>
+          </button>
+        )}
       </div>
     </div>
   );

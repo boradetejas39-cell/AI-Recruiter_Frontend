@@ -242,21 +242,23 @@ const UserInterviews = () => {
   const [showHRRoom, setShowHRRoom] = useState(false);
   const [hrRoomInterviewId, setHrRoomInterviewId] = useState(null);
 
+  const fetchInterviews = useCallback(async () => {
+    try {
+      const { interviewAPI } = await import('../../api/v2');
+      const res = await interviewAPI.list({ limit: 20 });
+      const data = res.data.data || [];
+      setInterviews(data);
+      if (data.length > 0 && !selected) setSelected(data[0]._id);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [selected]);
+
   useEffect(() => {
-    (async () => {
-      try {
-        const { interviewAPI } = await import('../../api/v2');
-        const res = await interviewAPI.list({ limit: 20 });
-        const data = res.data.data || [];
-        setInterviews(data);
-        if (data.length > 0) setSelected(data[0]._id);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+    fetchInterviews();
+  }, [fetchInterviews]);
 
   const currentInterview = interviews.find(iv => iv._id === selected);
   const roundStates = currentInterview ? getRoundStates(currentInterview) : [];
@@ -271,7 +273,11 @@ const UserInterviews = () => {
           interviewId={hrRoomInterviewId}
           role="user"
           userName={user?.name}
-          onClose={() => { setShowHRRoom(false); setHrRoomInterviewId(null); }}
+          onClose={() => { 
+            setShowHRRoom(false); 
+            setHrRoomInterviewId(null); 
+            fetchInterviews(); 
+          }}
         />
       )}
 
@@ -449,6 +455,21 @@ const UserInterviews = () => {
                       })}
                     </div>
                   </div>
+
+                  {/* Congratulations Banner */}
+                  {overallProgress === 100 && (
+                    <div className="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg animate-fade-in my-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center animate-bounce">
+                          <SparklesIcon className="h-6 w-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold">All Rounds Completed!</h3>
+                          <p className="text-sm opacity-90">Congratulations on finishing your interview journey. Our HR team will review your performance and get back to you shortly via email.</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* 3 Round cards */}
                   <div className="flex flex-col">

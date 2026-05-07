@@ -147,7 +147,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: AUTH_ACTIONS.LOGIN_START });
 
-      const response = await api.post('/auth/login', credentials);
+      const response = await api.post('/v2/auth/login', credentials);
       const { token, user } = response.data.data;
 
       sessionStorage.setItem('token', token);
@@ -175,7 +175,7 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: AUTH_ACTIONS.REGISTER_START });
 
-      const response = await api.post('/auth/register', userData);
+      const response = await api.post('/v2/auth/register', userData);
       const { token, user } = response.data.data;
 
       sessionStorage.setItem('token', token);
@@ -210,7 +210,7 @@ export const AuthProvider = ({ children }) => {
         body.credential = credentialOrToken;
       }
 
-      const response = await api.post('/auth/google', body);
+      const response = await api.post('/v2/auth/google', body);
       const { token, user } = response.data.data;
 
       sessionStorage.setItem('token', token);

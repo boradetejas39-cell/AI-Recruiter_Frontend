@@ -22,6 +22,7 @@ export const interviewAPI = {
     start: (data) => api.post(v2('/interviews/start'), data),
     answer: (id, data) => api.post(v2(`/interviews/${id}/answer`), data),
     evaluate: (id) => api.post(v2(`/interviews/${id}/evaluate`)),
+    completeHR: (id) => api.post(v2(`/interviews/${id}/complete-hr`)),
 };
 
 // ── Pipeline ────────────────────────────────────────────────────
